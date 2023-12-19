@@ -1,0 +1,27 @@
+version: "3.1"
+
+services:
+  mysql:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password --local-infile=1
+    environment:
+      MYSQL_ROOT_PASSWORD: yourpassword # Replace with your MySQL root password
+      MYSQL_DATABASE: Prevent_Disaster # Replace with your desired database name
+    volumes:
+      - ./db/db-data:/docker-entrypoint-initdb.d # Mounts the db/db-data directory
+      - ./db/my.cnf:/etc/mysql/conf.d/custom.cnf # Mounts the custom MySQL config file from db folder
+    ports:
+      - "3306:3306" # Exposes MySQL on port 3306
+
+  nest-api:
+    build: ./nest-api
+    environment:
+      DATABASE_HOST: mysql # Name of the MySQL service
+      DATABASE_PORT: 3306
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: yourpassword
+      DATABASE_NAME: Prevent_Disaster
+    ports:
+      - "3001:3001" # Expose the port your API runs on (assuming it's 3001)
+    depends_on:
+      - mysql
