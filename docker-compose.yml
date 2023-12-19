@@ -3,18 +3,24 @@ version: "3.1"
 services:
   mysql:
     image: mysql:latest
-    command: --default-authentication-plugin=mysql_native_password --local-infile=1
+    command: --default-authentication-plugin=caching_sha2_password --local-infile=1 --secure-file-priv=docker-entrypoint-initdb.d 
     environment:
       MYSQL_ROOT_PASSWORD: yourpassword # Replace with your MySQL root password
       MYSQL_DATABASE: Prevent_Disaster # Replace with your desired database name
     volumes:
       - ./db/db-data:/docker-entrypoint-initdb.d # Mounts the db/db-data directory
-      - ./db/my.cnf:/etc/mysql/conf.d/custom.cnf # Mounts the custom MySQL config file from db folder
     ports:
       - "3306:3306" # Exposes MySQL on port 3306
+    healthcheck:
+      test: 
+        - "CMD --sql='SHOW DATABASES;'"
+        - "exit 0"
+      interval: 5s
+      retries: 5
 
   nest-api:
     build: ./nest-api
+    restart: always
     environment:
       DATABASE_HOST: mysql # Name of the MySQL service
       DATABASE_PORT: 3306

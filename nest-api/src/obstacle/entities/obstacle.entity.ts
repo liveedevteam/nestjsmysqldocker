@@ -8,25 +8,25 @@ export class Obstacle {
   @Column()
   obstacle_type_id: number;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   title: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'datetime', nullable: true })
   start_date: Date;
 
-  @Column()
+  @Column({ type: 'dec', nullable: true })
   obstacle_status: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 7 })
+  @Column({ type: 'decimal', precision: 10, scale: 7, nullable: true })
   lat: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 7 })
+  @Column({ type: 'decimal', precision: 10, scale: 7, nullable: true })
   long: number;
 
   @Column({ type: 'text', nullable: true })
   note: string;
 
-  @Column()
+  @Column({ nullable: true })
   status: number;
 
   @Column({ length: 255, nullable: true })
@@ -50,25 +50,25 @@ export class Obstacle {
   @Column({ type: 'datetime', nullable: true })
   end_date: Date;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   province_name: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   amphoe_name: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   tambon_name: string;
 
   @Column({ length: 255, nullable: true })
   mooban_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   province_code: number;
 
-  @Column()
+  @Column({ nullable: true })
   amphoe_code: number;
 
-  @Column()
+  @Column({ nullable: true })
   tambon_code: number;
 
   @Column({ nullable: true })

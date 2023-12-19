@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS obstacle_type (
 
 -- Create 'obstacle' table
 CREATE TABLE IF NOT EXISTS obstacle (
-    obstacle_id INT,
+    obstacle_id INT AUTO_INCREMENT PRIMARY KEY,
     obstacle_type_id INT,
     title VARCHAR(255),
     start_date DATETIME,
@@ -53,16 +53,29 @@ CREATE TABLE IF NOT EXISTS obstacle (
 
 -- Insert predefined data into the 'obstacle_type' table
 INSERT INTO obstacle_type (obstacle_type_name, note, status, create_by, create_date, update_by, update_date, delete_by, delete_date, create_by_id, update_by_id, delete_by_id) VALUES
-(N'น้ำท่วมถนน', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(N'สะพานขาด', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(N'ถนนขาด', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(N'ดินถล่ม', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+('น้ำท่วมถนน', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('สะพานขาด', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('ถนนขาด', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('ดินถล่ม', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- Import data from the CSV file into the 'obstacle' table
-LOAD DATA LOCAL INFILE '/docker-entrypoint-initdb.d/data.csv'
+LOAD DATA INFILE '/docker-entrypoint-initdb.d/data.csv'
 INTO TABLE obstacle
-FIELDS TERMINATED BY ','
-OPTIONALLY ENCLOSED BY '\"'
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
-(obstacle_id, obstacle_type_id, title, start_date, obstacle_status, lat, `long`, note, status, create_by, create_date, update_by, update_date, delete_by, delete_date, end_date, province_name, amphoe_name, tambon_name, mooban_name, province_code, amphoe_code, tambon_code, mooban_code);
+(obstacle_id, obstacle_type_id, title, @start_date, @obstacle_status, @lat, @long, note, status, create_by, @create_date, update_by, @update_date, delete_by, @delete_date, @end_date, province_name, amphoe_name, tambon_name, mooban_name, @province_code, @amphoe_code, @tambon_code, @mooban_code)
+SET start_date = IF(@start_date = '', NULL, STR_TO_DATE(@start_date, '%m/%d/%Y %H:%i')),
+    create_date = IF(@create_date = '', NULL, STR_TO_DATE(@create_date, '%m/%d/%Y %H:%i')),
+    update_date = IF(@update_date = '', NULL, STR_TO_DATE(@update_date, '%m/%d/%Y %H:%i')),
+    delete_date = IF(@delete_date = '', NULL, STR_TO_DATE(@delete_date, '%m/%d/%Y %H:%i')),
+    end_date = IF(@end_date = '', NULL, STR_TO_DATE(@end_date, '%m/%d/%Y %H:%i')),
+    mooban_code = CASE WHEN @mooban_code REGEXP '^[0-9]+$' THEN CONVERT(@mooban_code, UNSIGNED) ELSE NULL END,
+    lat = IF(@lat = '', NULL, @lat),
+    `long` = IF(@long = '', NULL, @long),
+    obstacle_status = IF(@obstacle_status = '', NULL, @obstacle_status),
+    province_code = CASE WHEN @province_code REGEXP '^[0-9]+$' THEN CONVERT(@province_code, UNSIGNED) ELSE NULL END,
+    tambon_code = CASE WHEN @tambon_code REGEXP '^[0-9]+$' THEN CONVERT(@tambon_code, UNSIGNED) ELSE NULL END,
+    amphoe_code = CASE WHEN @amphoe_code REGEXP '^[0-9]+$' THEN CONVERT(@amphoe_code, UNSIGNED) ELSE NULL END;
+
