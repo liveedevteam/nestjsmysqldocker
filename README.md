@@ -30,3 +30,29 @@ Body (Data for Test)
   "tambon_code": 103001
 }
 ```
+
+## NEST-API (DEV)
+1. Go to nest-api
+```
+cd ./nest-api
+```
+2. create .env file
+```
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=yourpassword
+DATABASE_NAME=Prevent_Disaster
+```
+3. Run database from docker-compose (Comment nest-api service in compose)
+```
+docker compose up
+```
+4. Install node_modules
+```
+npm i
+```
+5. Run dev mode
+```
+npm run start:dev
+```

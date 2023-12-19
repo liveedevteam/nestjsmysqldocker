@@ -12,7 +12,7 @@ export class ObstacleController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id') id: string): Promise<ObstacleDto> {
         return this.obstacleService.findOne(id);
     }
 

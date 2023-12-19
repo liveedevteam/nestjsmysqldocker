@@ -18,16 +18,16 @@ services:
       interval: 5s
       retries: 5
 
-  nest-api:
-    build: ./nest-api
-    restart: always
-    environment:
-      DATABASE_HOST: mysql # Name of the MySQL service
-      DATABASE_PORT: 3306
-      DATABASE_USERNAME: root
-      DATABASE_PASSWORD: yourpassword
-      DATABASE_NAME: Prevent_Disaster
-    ports:
-      - "3001:3001" # Expose the port your API runs on (assuming it's 3001)
-    depends_on:
-      - mysql
+  # nest-api:
+  #   build: ./nest-api
+  #   restart: always
+  #   environment:
+  #     DATABASE_HOST: mysql # Name of the MySQL service
+  #     DATABASE_PORT: 3306
+  #     DATABASE_USERNAME: root
+  #     DATABASE_PASSWORD: yourpassword
+  #     DATABASE_NAME: Prevent_Disaster
+  #   ports:
+  #     - "3001:3001" # Expose the port your API runs on (assuming it's 3001)
+  #   depends_on:
+  #     - mysql

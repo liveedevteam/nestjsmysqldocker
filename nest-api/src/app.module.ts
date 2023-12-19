@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ObstacleModule } from './obstacle/obstacle.module';
 import { Obstacle } from './obstacle/entities/obstacle.entity';
+import { ObstacleType } from './obstacle_type/entities/obstacleType.entity';
+import { ObstacleTypeModule } from './obstacle_type/obstacleType.module';
 
 @Module({
   imports: [
@@ -21,11 +23,15 @@ import { Obstacle } from './obstacle/entities/obstacle.entity';
         username: configService.get('DATABASE_USERNAME'), // Username
         password: configService.get('DATABASE_PASSWORD'), // Password
         database: configService.get('DATABASE_NAME'), // Name of the database
-        entities: [Obstacle], // Entities to be loaded for this connection
+        entities: [
+          Obstacle,
+          ObstacleType
+        ], // Entities to be loaded for this connection
         synchronize: true, // Sync entities (not for production)
       }),
     }),
     ObstacleModule, // Importing the ObstacleModule
+    ObstacleTypeModule
   ],
   controllers: [AppController],
   providers: [AppService],

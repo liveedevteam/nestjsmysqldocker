@@ -6,23 +6,20 @@ import { ObstacleDto } from './dto/obstacle.dto';
 
 @Injectable()
 export class ObstacleService {
-    findOne(id: string) {
-        throw new Error('Method not implemented.');
-    }
     constructor(
         @InjectRepository(Obstacle)
         private obstacleRepository: Repository<Obstacle>,
     ) { }
 
+    async findOne(id: string): Promise<ObstacleDto> {
+        const obstacle_id = parseInt(id, 10);
+        const obstacle = await this.obstacleRepository.findOne({ where: { obstacle_id } });
+        return obstacle;
+    }
+
     async findAll(): Promise<ObstacleDto[]> {
         const obstacles = await this.obstacleRepository.find();
-        return obstacles.map(obstacle => {
-            // Convert each Obstacle entity to ObstacleDto
-            return {
-                ...obstacle,
-                // Any other transformations if needed
-            };
-        });
+        return obstacles;
     }
 
     async create(obstacleDto: ObstacleDto): Promise<ObstacleDto> {
